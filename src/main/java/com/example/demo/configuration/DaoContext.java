@@ -1,4 +1,4 @@
-package com.example.configuration;
+package com.example.demo.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
