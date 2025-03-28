@@ -1,4 +1,4 @@
-package com.example.services;
+package com.example.demo.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public abstract class GenericService<T, E extends GenericEntity, D extends IDao<
         for (GenericEntity e : result.values()) {
             list.add((E) e);
         }
-        return list;
+        return new ArrayList<>(dao.findAll().values().stream().map(e -> (E) e).toList());
     }
 
     public E findById(T id) {

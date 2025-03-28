@@ -5,9 +5,11 @@ import java.time.LocalTime;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @ToString(callSuper = true)
+@Slf4j
 public class VisitaMedica extends GenericEntity{
     
     private LocalDate data;

@@ -43,7 +43,7 @@ public class DaoVisitaMedica implements IDao<Long, VisitaMedica> {
 
     @Override
     public VisitaMedica findById(Long id) {
-        String query = "SELECT * FROM visite_mediche WHERE id = ?";
+        String query = "SELECT v.*, m.*, u.* FROM visite_mediche v INNER JOIN medici m ON v.medico_id = m.id INNER JOIN utenti u ON m.utente_id = u.id WHERE v.id = ?";
         VisitaMedica v = null;
         Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query, String.valueOf(id));
         for (Map<String, String> entita : result.values()) {
@@ -54,7 +54,7 @@ public class DaoVisitaMedica implements IDao<Long, VisitaMedica> {
 
     @Override
     public Map<Long, GenericEntity> findAll() {
-        String query = "SELECT * FROM visite_mediche";
+        String query = "SELECT v.*, m.*, u.* FROM visite_mediche v INNER JOIN medici m ON v.medico_id = m.id INNER JOIN utenti u ON m.utente_id = u.id";
         Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query);
         Map<Long, GenericEntity> ris = new HashMap<>();
         GenericEntity v = null;

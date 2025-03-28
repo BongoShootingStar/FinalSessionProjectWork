@@ -1,12 +1,15 @@
 package com.example.demo.entities;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @ToString(callSuper = true)
+@Slf4j
 public class Utente extends GenericEntity {
 
     private String username;
@@ -24,9 +27,5 @@ public class Utente extends GenericEntity {
     private String telefono;
 
     private LocalDate data_nascita;
-
-    private Paziente paziente;
-
-    private Medico medico;
 
 }

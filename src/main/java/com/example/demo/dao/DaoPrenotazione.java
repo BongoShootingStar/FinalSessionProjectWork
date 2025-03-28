@@ -29,7 +29,8 @@ public class DaoPrenotazione implements IDao<Long, Prenotazione> {
     @Override
     public void update(Prenotazione e) {
         String comando = "UPDATE prenotazioni SET visita_id = ?, paziente_id = ? WHERE id = ?";
-        databaseMySQL.executeDML(comando, String.valueOf(e.getVisita().getId()), String.valueOf(e.getPaziente().getId()),
+        databaseMySQL.executeDML(comando, String.valueOf(e.getVisita().getId()),
+                String.valueOf(e.getPaziente().getId()),
                 String.valueOf(e.getId()));
     }
 
@@ -41,18 +42,18 @@ public class DaoPrenotazione implements IDao<Long, Prenotazione> {
 
     @Override
     public Prenotazione findById(Long id) {
-        String query = "SELECT * FROM prenotazioni WHERE id = ?";
-        Prenotazione p = null;
+        String query = "SELECT pre.*, v.*, p.* FROM prenotazioni pre INNER JOIN visitemediche v ON pre.visita_id = v.id INNER JOIN pazienti p ON pre.paziente_id = p.id WHERE pre.id = ?";
+        Prenotazione p = new Prenotazione();
         Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query, String.valueOf(id));
         for (Map<String, String> entita : result.values()) {
-            p = context.getBean(Prenotazione.class, entita);            
+            p = context.getBean(Prenotazione.class, entita);
         }
         return p;
     }
 
     @Override
     public Map<Long, GenericEntity> findAll() {
-        String query = "SELECT * FROM prenotazioni";
+        String query = "SELECT pre.*, v.*, p.* FROM prenotazioni pre INNER JOIN visitemediche v ON pre.visita_id = v.id INNER JOIN pazienti p ON pre.paziente_id = p.id";
         Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query);
         Map<Long, GenericEntity> ris = new HashMap<>();
         GenericEntity p = null;
@@ -62,5 +63,5 @@ public class DaoPrenotazione implements IDao<Long, Prenotazione> {
         }
         return ris;
     }
-    
+
 }

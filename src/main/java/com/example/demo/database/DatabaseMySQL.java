@@ -12,60 +12,12 @@ import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
 
-/*tramite l'annotazione @Service indico a Spring che questa classe
- * è una classe di servizio e quindi deve essere gestita da Spring
- * cioè andrà direttmente spring a creare un bean(un oggetto) di questa classe
- * senza che io debba farlo manualmente in un context(il contenitore dei Bean)
- * spring creerà un'istanza di questa classe e la metterà a disposizione
- * per essere iniettata in altre classi
- * Un bean di servizio è una classe che implementa la logica di business
- * cioè la logica usata nella classi che hanno funzionalità legate al business dell'applicazione
- * Sring si occuperà sia della creazione del bean e della sua gestione 
- * Di default il bean sarà singleton cioè sarà unico per tutta l'applicazione
-Questi sono i concetti chiavi di @Service:
-1. Gestione automatica del bean: Spring creerà un'istanza di questa classe e la metterà a disposizione per essere iniettata in altre 
-classi senza bisogno di istanziarla manualmente.
-
-2. Pattern Singleton (di default): il bean creato sarà un singleton, cioè ci sarà una sola istanza della classe in tutta l'applicazione, 
-evitando la creazione ripetuta e non necessaria di oggetti.
-
-3. Integrazione con Dependency Injection: qualsiasi altra classe che ha bisogno di un oggetto DatabaseMySql può 
-semplicemente dichiararlo come dipendenza, e Spring lo fornirà automaticamente.
-
-4. Separazione dei ruoli: i componenti di accesso ai dati dovrebbero essere definiti come bean di servizio per seguire il 
-principio della Single Responsibility
-(Il SRP afferma che: "Una classe dovrebbe avere una e una sola ragione per cambiare."
-In altre parole, ogni classe dovrebbe avere un solo scopo e una sola responsabilità ben definita all'interno dell'applicazione.).
-*/
 @Service
 public class DatabaseMySQL implements IDatabase {
 
-    /*
-     * prendo i valori dal file di configurazione in questo modo
-     * posso cambiarli senza dover ricompilare il codice
-     * basta modificare i valori salvati nel file di configurazione
-     * con l'annotazione @Value("${spring.datasource.username}") prendo
-     * il valore della variabile username dal file di configurazione
-     * e lo inietto nella proprietà username
-     * posso usare questa annotazione per tutte le proprietà che voglio
-     * e anche per i metodi
-     * Funziona solo in bean gestiti da Spring (annotati
-     * con @Component, @Service, @Repository, ecc.)
-     * https://docs.spring.io/spring-boot/appendix/application-properties/index.html
-     * #appendix.application-properties.data
-     */
     @Value("${spring.datasource.username}")
     private String username;
 
-    // L'annotazione @Value in Spring viene utilizzata per iniettare valori nelle
-    // variabili di istanza di una classe.
-    // Questi valori possono provenire da:
-    // ✔ File di configurazione (application.properties o application.yml)
-    /*
-     * l'annotazione @Value può anche essere utilizzata a livello di metodo per
-     * iniettare valori
-     * nei parametri del metodo.
-     */
     @Value("${spring.datasource.password}")
     private String password;
     @Value("${spring.datasource.url}")
@@ -73,44 +25,12 @@ public class DatabaseMySQL implements IDatabase {
 
     private Connection connection;
 
-    // driver
     @Value("${spring.datasource.driver-class-name}")
     private String driver;
 
-    // spring creerà un oggetto- Bean - di tipo DatabaseMySql
-    // tramite costruttore vuoto
-    // poi inieterrà i valori all'interno delle proprietà prendendoli dal file di
-    // configurazione
     public DatabaseMySQL() {
     }
 
-    // dopo la creazione in Singleton di DatabaseMySql vorrei che venisse invocato
-    // il metodo openConnection in modo da aprire la connessione
-    /*
-     * L'annotazione @PostConstruct viene usata per indicare un metodo che deve
-     * essere eseguito automaticamente
-     * dopo che il bean(l'istanza di tipo DatabaseMySql)
-     * è stato creato e tutte le dipendenze sono state iniettate da Spring.
-     * Come funziona @PostConstruct?
-     * 1. Spring crea un'istanza della classe DatabaseMySql (perché è annotata
-     * con @Service).
-     * 2. Spring inietta i valori provenienti dal file application.properties nelle
-     * variabili url, username, password, ecc.
-     * 3. Dopo che tutte le dipendenze sono state risolte, Spring chiama
-     * automaticamente il metodo openConnection().
-     * 4. La connessione al database viene aperta.
-     * 
-     * Quando si usa @PostConstruct?
-     * Per eseguire operazioni di inizializzazione dopo la creazione del bean.
-     * Per aprire connessioni a database, caricare dati iniziali o configurare
-     * risorse.
-     * Per evitare di dover chiamare il metodo manualmente in altre parti del
-     * codice.
-     * In questo caso di aprire la connessione senza dover chiamare il metodo
-     * esplicitamente
-     * inoltre stiamo garantendo che un'operazione venga eseguita appena il bean
-     * viene creato e inizializzato.
-     */
     @PostConstruct
     private void openConnection() {
         try {

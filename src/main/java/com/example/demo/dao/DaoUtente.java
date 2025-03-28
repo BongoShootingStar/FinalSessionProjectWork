@@ -1,15 +1,9 @@
 package com.example.demo.dao;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.database.DatabaseMySQL;
-import com.example.demo.entities.GenericEntity;
 import com.example.demo.entities.Utente;
 
 import lombok.Data;

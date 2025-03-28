@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.database.DatabaseMySQL;
 import com.example.demo.entities.GenericEntity;
@@ -21,6 +22,7 @@ public class DaoMedico extends DaoUtente implements IDao<Long, Medico> {
     private final DatabaseMySQL databaseMySQL;
     private final ApplicationContext context;
 
+    @Transactional
     @Override
     public Long create(Medico e) {
         Long id = super.createUtente(e);
@@ -37,7 +39,7 @@ public class DaoMedico extends DaoUtente implements IDao<Long, Medico> {
     public void update(Medico e) {
         super.updateUtente(e);
         String comando = "UPDATE medici SET utente_id = ?, specializzazione = ? WHERE id = ?";
-        databaseMySQL.executeDML(comando, String.valueOf(e.getId()), e.getSpecializzazione());
+        databaseMySQL.executeDML(comando, String.valueOf(e.getId()), e.getSpecializzazione(), String.valueOf(e.getId()));
     }
 
     @Override
@@ -49,7 +51,7 @@ public class DaoMedico extends DaoUtente implements IDao<Long, Medico> {
 
     @Override
     public Medico findById(Long id) {
-        String query = "SELECT * FROM medici WHERE id = ?";
+        String query = "SELECT m.*, u.* FROM medici m INNER JOIN utenti u ON m.utente_id = u.id WHERE m.id = ?";
         Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query, String.valueOf(id));
         if (result.size() == 0) {
             return null;
@@ -61,7 +63,7 @@ public class DaoMedico extends DaoUtente implements IDao<Long, Medico> {
 
     @Override
     public Map<Long, GenericEntity> findAll() {
-        String query = "SELECT * FROM medici";
+        String query = "SELECT m.*, u.* FROM medici m INNER JOIN utenti u ON m.utente_id = u.id";
         Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query);
         Map<Long, GenericEntity> ris = new HashMap<>();
         for (Map.Entry<Long, Map<String, String>> coppia : result.entrySet()) {
