@@ -1,40 +1,74 @@
 package com.example.demo.dao;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.database.DatabaseMySQL;
 import com.example.demo.entities.GenericEntity;
 import com.example.demo.entities.Medico;
+import com.example.demo.entities.Utente;
 
-public class DaoMedico implements IDao<Long, Medico> {
+import lombok.Data;
+
+@Service
+@Data
+public class DaoMedico extends DaoUtente implements IDao<Long, Medico> {
+
+    private final Utente utente;
+    private final DatabaseMySQL databaseMySQL;
+    private final ApplicationContext context;
 
     @Override
     public Long create(Medico e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        Long id = super.createUtente(e);
+        String comando = "INSERT INTO medici (id, utente_id, specializzazione) VALUES (?, ?, ?)";
+        if (id != null) {
+            e.setId(id);
+            databaseMySQL.executeDML(comando, String.valueOf(e.getId()), String.valueOf(e.getId()),
+                    e.getSpecializzazione());
+        }
+        return id;
     }
 
     @Override
     public void update(Medico e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        super.updateUtente(e);
+        String comando = "UPDATE medici SET utente_id = ?, specializzazione = ? WHERE id = ?";
+        databaseMySQL.executeDML(comando, String.valueOf(e.getId()), e.getSpecializzazione());
     }
 
     @Override
     public void delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        super.deleteUtente(id);
+        String comando = "DELETE FROM medici WHERE id = ?";
+        databaseMySQL.executeDML(comando, String.valueOf(id));
     }
 
     @Override
     public Medico findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        String query = "SELECT * FROM medici WHERE id = ?";
+        Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query, String.valueOf(id));
+        if (result.size() == 0) {
+            return null;
+        }
+        Medico m = context.getBean(Medico.class, result.get(id));
+        return m;
+
     }
 
     @Override
     public Map<Long, GenericEntity> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        String query = "SELECT * FROM medici";
+        Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query);
+        Map<Long, GenericEntity> ris = new HashMap<>();
+        for (Map.Entry<Long, Map<String, String>> coppia : result.entrySet()) {
+            Medico m = context.getBean(Medico.class, coppia.getValue());
+            ris.put(coppia.getKey(), m);
+        }
+        return ris;
     }
-    
+
 }

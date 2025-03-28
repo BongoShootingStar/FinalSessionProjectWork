@@ -1,40 +1,66 @@
 package com.example.demo.dao;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.database.DatabaseMySQL;
 import com.example.demo.entities.GenericEntity;
 import com.example.demo.entities.Prenotazione;
 
+import lombok.Data;
+
+@Service
+@Data
 public class DaoPrenotazione implements IDao<Long, Prenotazione> {
+
+    private final DatabaseMySQL databaseMySQL;
+    private final ApplicationContext context;
 
     @Override
     public Long create(Prenotazione e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        String comando = "INSERT INTO prenotazioni (id, visita_id, paziente_id) VALUES (?, ?, ?)";
+        return databaseMySQL.executeDML(comando, String.valueOf(e.getId()), String.valueOf(e.getVisita().getId()),
+                String.valueOf(e.getPaziente().getId()));
     }
 
     @Override
     public void update(Prenotazione e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        String comando = "UPDATE prenotazioni SET visita_id = ?, paziente_id = ? WHERE id = ?";
+        databaseMySQL.executeDML(comando, String.valueOf(e.getVisita().getId()), String.valueOf(e.getPaziente().getId()),
+                String.valueOf(e.getId()));
     }
 
     @Override
     public void delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        String comando = "DELETE FROM prenotazioni WHERE id = ?";
+        databaseMySQL.executeDML(comando, String.valueOf(id));
     }
 
     @Override
     public Prenotazione findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        String query = "SELECT * FROM prenotazioni WHERE id = ?";
+        Prenotazione p = null;
+        Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query, String.valueOf(id));
+        for (Map<String, String> entita : result.values()) {
+            p = context.getBean(Prenotazione.class, entita);            
+        }
+        return p;
     }
 
     @Override
     public Map<Long, GenericEntity> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        String query = "SELECT * FROM prenotazioni";
+        Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query);
+        Map<Long, GenericEntity> ris = new HashMap<>();
+        GenericEntity p = null;
+        for (Map<String, String> entita : result.values()) {
+            p = context.getBean(Prenotazione.class, entita);
+            ris.put(Long.parseLong(entita.get("id")), p);
+        }
+        return ris;
     }
     
 }
