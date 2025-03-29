@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.PostConstruct;
 
 @Service
-public class DatabaseMySQL implements IDatabase {
+public class DatabaseMySql implements IDatabase {
 
     @Value("${spring.datasource.username}")
     private String username;
@@ -28,7 +28,7 @@ public class DatabaseMySQL implements IDatabase {
     @Value("${spring.datasource.driver-class-name}")
     private String driver;
 
-    public DatabaseMySQL() {
+    public DatabaseMySql() {
     }
 
     @PostConstruct

@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.database.DatabaseMySQL;
+import com.example.demo.database.DatabaseMySql;
 import com.example.demo.entities.GenericEntity;
 import com.example.demo.entities.Medico;
 import com.example.demo.entities.Utente;
@@ -19,7 +19,7 @@ import lombok.Data;
 public class DaoMedico extends DaoUtente implements IDao<Long, Medico> {
 
     private final Utente utente;
-    private final DatabaseMySQL databaseMySQL;
+    private final DatabaseMySql databaseMySQL;
     private final ApplicationContext context;
 
     @Transactional

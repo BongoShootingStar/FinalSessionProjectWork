@@ -3,7 +3,7 @@ package com.example.demo.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.database.DatabaseMySQL;
+import com.example.demo.database.DatabaseMySql;
 import com.example.demo.entities.Utente;
 
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.Data;
 public abstract class DaoUtente {
 
     @Autowired
-    private DatabaseMySQL databaseMySQL;
+    private DatabaseMySql databaseMySQL;
 
     public Long createUtente(Utente e) {
         String comando = "INSERT INTO utenti (username, password, email, ruolo, nome, cognome, telefono, data_nascita) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

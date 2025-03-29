@@ -19,7 +19,8 @@ public class ControllerMedico {
 
     @GetMapping
     public List<Medico> getAll() {
-        return serviceMedico.findAll();
+        List<Medico> result = serviceMedico.findAll();
+        return result;
     }
 
     @GetMapping("/{id}")
