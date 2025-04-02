@@ -24,15 +24,27 @@ public class ServiceMedico extends GenericService<Long, Medico, DaoMedico> {
     }
 
     public List<Medico> findBySpecializzazione(String specializzazione) {
-    List<Medico> medici = new ArrayList<>();
-    Map<Long, GenericEntity> tutti = getDao().findAll();
-    for (GenericEntity entity : tutti.values()) {
-        Medico m = (Medico) entity;
-        if (m.getSpecializzazione() != null && m.getSpecializzazione().equalsIgnoreCase(specializzazione)) {
-            medici.add(m);
+        List<Medico> medici = new ArrayList<>();
+        Map<Long, GenericEntity> tutti = getDao().findAll();
+        for (GenericEntity entity : tutti.values()) {
+            Medico m = (Medico) entity;
+            if (m.getSpecializzazione() != null && m.getSpecializzazione().equalsIgnoreCase(specializzazione)) {
+                medici.add(m);
+            }
         }
+        return medici;
     }
-    return medici;
-}
+
+    public List<Medico> findByProfilo(String nome, String cognome, String specializzazione){
+        List<Medico> medici = new ArrayList<>();
+        Map<Long, GenericEntity> tutti = getDao().findAll();
+        for (GenericEntity entity : tutti.values()) {
+            Medico m = (Medico) entity;
+            if (m.getNome() != null && m.getNome().equalsIgnoreCase(nome) && m.getCognome() != null && m.getCognome().equalsIgnoreCase(cognome) && m.getSpecializzazione() != null && m.getSpecializzazione().equalsIgnoreCase(specializzazione)) {
+                medici.add(m);
+            }
+        }
+        return medici;
+    }
 
 }

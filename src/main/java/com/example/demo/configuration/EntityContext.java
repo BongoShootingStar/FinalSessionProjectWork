@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import com.example.demo.entities.Amministratore;
 import com.example.demo.entities.Medico;
 import com.example.demo.entities.Paziente;
 import com.example.demo.entities.Prenotazione;
@@ -53,6 +54,14 @@ public class EntityContext {
         VisitaMedica v = new VisitaMedica();
         v.fromMap(mappa);
         return v;
+    }
+
+    @Bean
+    @Scope("prototype")
+    public Amministratore amministratore(Map<String, String> mappa) {
+        Amministratore a = new Amministratore();
+        a.fromMap(mappa);
+        return a;
     }
 
 }

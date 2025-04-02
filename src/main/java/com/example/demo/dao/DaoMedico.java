@@ -39,7 +39,8 @@ public class DaoMedico extends DaoUtente implements IDao<Long, Medico> {
     public void update(Medico e) {
         super.updateUtente(e);
         String comando = "UPDATE medici SET utente_id = ?, specializzazione = ? WHERE id = ?";
-        databaseMySQL.executeDML(comando, String.valueOf(e.getId()), e.getSpecializzazione(), String.valueOf(e.getId()));
+        databaseMySQL.executeDML(comando, String.valueOf(e.getId()), e.getSpecializzazione(),
+                String.valueOf(e.getId()));
     }
 
     @Override
@@ -65,6 +66,27 @@ public class DaoMedico extends DaoUtente implements IDao<Long, Medico> {
     public Map<Long, GenericEntity> findAll() {
         String query = "SELECT m.*, u.* FROM medici m INNER JOIN utenti u ON m.utente_id = u.id";
         Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query);
+        Map<Long, GenericEntity> ris = new HashMap<>();
+        for (Map.Entry<Long, Map<String, String>> coppia : result.entrySet()) {
+            Medico m = context.getBean(Medico.class, coppia.getValue());
+            ris.put(coppia.getKey(), m);
+        }
+        return ris;
+    }
+
+    public Medico findBySpecializzazione(String specializzazione) {
+        String query = "SELECT m.*, u.* FROM medici m INNER JOIN utenti u ON m.utente_id = u.id WHERE m.specializzazione = ?";
+        Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query, specializzazione);
+        if (result.size() == 0) {
+            return null;
+        }
+        Medico m = context.getBean(Medico.class, result.values().iterator().next());
+        return m;
+    }
+
+    public Map<Long, GenericEntity> findByProfilo(String nome, String cognome, String specializzazione) {
+        String query = "SELECT m.*, u.* FROM medici m INNER JOIN utenti u ON m.utente_id = u.id WHERE u.nome = ? OR u.cognome = ? OR m.specializzazione = ?";
+        Map<Long, Map<String, String>> result = databaseMySQL.executeDQL(query, nome, cognome, specializzazione);
         Map<Long, GenericEntity> ris = new HashMap<>();
         for (Map.Entry<Long, Map<String, String>> coppia : result.entrySet()) {
             Medico m = context.getBean(Medico.class, coppia.getValue());

@@ -55,4 +55,19 @@ public class ControllerMedico {
         }
         return medici;
     }
+
+    @GetMapping("/profilo")
+    public List<Medico> findByProfilo(@RequestParam String nome, @RequestParam String cognome,
+            @RequestParam String specializzazione) {
+        List<Medico> medici = new ArrayList<>();
+        for (Object e : serviceMedico.getDao().findAll().values()) {
+            Medico m = (Medico) e;
+            if (m.getNome() != null && m.getNome().equalsIgnoreCase(nome) && m.getCognome() != null
+                    && m.getCognome().equalsIgnoreCase(cognome) && m.getSpecializzazione() != null
+                    && m.getSpecializzazione().equalsIgnoreCase(specializzazione)) {
+                medici.add(m);
+            }
+        }
+        return medici;
+    }
 }
